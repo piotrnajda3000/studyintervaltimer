@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">StudyIntervalTimer</string>
+    <string name="resume">Resume</string>
+    <string name="prevTimer">Previous</string>
+    <string name="nextTimer">Next</string>
+    <string name="settings">Settings</string>
+</resources>
