@@ -50,17 +50,6 @@ fun ChainedTimersScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
-
-
-    // Initialize timers
-//    if (!uiState.setDetails.haveTimersBeenInitialized) {
-//        LaunchedEffect(Unit) {
-//            IntervalsDataSource.classicPomodoro.timers.forEach { interval ->
-//                viewModel.addTimer(interval)
-//            }
-//            viewModel.setHaveTimersBeenInitialized(true);
-//        }
-//    }
     Scaffold(
         topBar = {
             StudyIntervalTimerTopAppBar(
@@ -120,14 +109,13 @@ fun ChainedTimersScreen(
         ) {
             item {
                 uiState.timerDetails.timers.forEach { timer ->
-//                    Log.d("kurwa", timer.asString())
                     ChainedTimer(
                         timer = timer,
                         modifier = Modifier.padding(16.dp),
                         currentTimerNo = uiState.timerDetails.currentTimerId,
                         tickStrategy = ChainedTimerTickStrategy(
-                            onTimerFinish = { viewModel.onTimerFinish() },
-                            currentTimerId = timer.timerUiState.value.timerDetails.id
+                            onTimerFinish = viewModel::onTimerFinish,
+                            currentTimerId = uiState.timerDetails.currentTimerId,
                         )
                     )
                 }

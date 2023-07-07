@@ -48,6 +48,7 @@ fun ChainedTimer(
         key3 = currentTimerNo
     ) {
         timer.tick(tickStrategy)
+
         // Scroll the current timer into view
         if (timerUiState.timerDetails.id == currentTimerNo) {
             coroutineScope.launch {

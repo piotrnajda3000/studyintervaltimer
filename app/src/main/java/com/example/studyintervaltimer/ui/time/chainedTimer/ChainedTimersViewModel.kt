@@ -95,13 +95,13 @@ class ChainedTimersViewModel(
             viewModelScope.launch {
                 modelsRepository.updateTimersSet(
                     uiState.value.copy(
-                        timerDetails = uiState.value.timerDetails.copy(currentTimerId = uiState.value.timerDetails.currentTimerId + 1)
+                        timerDetails = uiState.value.timerDetails.copy(currentTimerId = uiState.value.timerDetails.currentTimerId + 1),
                     ).toTimersSet()
                 )
-                getTimer(uiState.value.timerDetails.currentTimerId + 1)?.startTimer()
+                Log.d("hehe", getNextTimer()?.timerUiState!!.value.timerDetails.id.toString())
+                getNextTimer()?.startTimer()
             }
         } else {
-
             viewModelScope.launch {
                 uiState.value.timerDetails.timers.forEach {
                     it.resetTimer()

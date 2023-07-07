@@ -23,7 +23,6 @@ data class ChainedTimersSetDetails(
 )
 
 data class ChainedTimersDetails(
-    //    val timers: MutableList<TimerUiState> = mutableStateListOf(),
     val timers: MutableList<TimerViewModel> = mutableStateListOf(),
     val currentTimerId: Long = 1,
 )

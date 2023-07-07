@@ -33,10 +33,12 @@ class TimerViewModel(
     fun startTimer() {
         if (timerUiState.value.timerDetails.remainingTime.getAsMs() > 0) {
             viewModelScope.launch {
-                timerUiState.value.copy(
-                    timerDetails = timerUiState.value.timerDetails.copy(
-                        isTimerRunning = true
-                    )
+                modelsRepository.updateTimer(
+                    timerUiState.value.copy(
+                        timerDetails = timerUiState.value.timerDetails.copy(
+                            isTimerRunning = true
+                        )
+                    ).toTimer()
                 )
             }
         }

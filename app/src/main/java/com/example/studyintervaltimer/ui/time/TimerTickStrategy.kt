@@ -1,18 +1,15 @@
 package com.example.studyintervaltimer.ui.time
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+import android.util.Log
 import com.example.studyintervaltimer.data.ModelsRepository
 import com.example.studyintervaltimer.ui.time.timer.TimerUiState
 import com.example.studyintervaltimer.ui.time.timer.toTimer
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlin.coroutines.coroutineContext
 
 interface TickStrategy {
-    fun onTimerFinish(): () -> Unit = { }
+    val onTimerFinish: () -> Unit
     suspend fun tick(
         uiState: StateFlow<TimerUiState>,
         modelsRepository: ModelsRepository,
@@ -20,9 +17,8 @@ interface TickStrategy {
 }
 
 class SingleTimerTickStrategy(
-    private val onTimerFinish: () -> Unit = { },
+    override val onTimerFinish: () -> Unit,
 ) : TickStrategy {
-    override fun onTimerFinish(): () -> Unit = onTimerFinish
 
     override suspend fun tick(
         uiState: StateFlow<TimerUiState>,
@@ -38,13 +34,9 @@ class SingleTimerTickStrategy(
                         )
                     ).toTimer()
                 )
+                onTimerFinish()
             }
-//            uiState.update {
-//                it.copy(timerDetails = it.timerDetails.copy(isTimerRunning = false))
-//            }
-            onTimerFinish()
-        }
-        if (uiState.value.timerDetails.isTimerRunning) {
+        } else if (uiState.value.timerDetails.isTimerRunning) {
             delay(1000L)
             coroutineScope {
                 modelsRepository.updateTimer(
@@ -58,23 +50,17 @@ class SingleTimerTickStrategy(
                     ).toTimer()
                 )
             }
-//            uiState.update {
-//                it.copy(
-//                    timerDetails = it.timerDetails.copy(
-//                        remainingTimeMs = it.timerDetails.remainingTime.getAsMs().minus(1000L),
-//                        elapsedTime = it.timerDetails.elapsedTime + 1000L
-//                    )
-//                )
-//            }
         }
     }
 }
 
 class ChainedTimerTickStrategy(
-    onTimerFinish: () -> Unit,
+    override val onTimerFinish: () -> Unit,
     private val currentTimerId: Long,
 ) : TickStrategy {
-    private val singleTimerTickStrategy = SingleTimerTickStrategy(onTimerFinish)
+    private val singleTimerTickStrategy =
+        SingleTimerTickStrategy(onTimerFinish = onTimerFinish)
+
     override suspend fun tick(
         uiState: StateFlow<TimerUiState>,
         modelsRepository: ModelsRepository,
