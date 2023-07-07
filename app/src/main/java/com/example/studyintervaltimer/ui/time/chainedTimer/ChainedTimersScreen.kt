@@ -51,7 +51,6 @@ fun ChainedTimersScreen(
     val uiState by viewModel.uiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    Log.d("kurwa", uiState.timerDetails.currentTimerId.toString())
 
     // Initialize timers
 //    if (!uiState.setDetails.haveTimersBeenInitialized) {
@@ -121,6 +120,7 @@ fun ChainedTimersScreen(
         ) {
             item {
                 uiState.timerDetails.timers.forEach { timer ->
+//                    Log.d("kurwa", timer.asString())
                     ChainedTimer(
                         timer = timer,
                         modifier = Modifier.padding(16.dp),

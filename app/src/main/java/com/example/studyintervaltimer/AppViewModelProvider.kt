@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.studyintervaltimer.ui.home.HomeViewModel
 import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersViewModel
+import com.example.studyintervaltimer.ui.time.timer.TimerViewModel
 
 /**
  * Provides Factory to create instance of ViewModel for the entire Inventory app
@@ -25,6 +26,12 @@ object AppViewModelProvider {
                 studyIntervalTimerApplication().container.modelsRepository
             )
         }
+
+//        initializer {
+//            TimerViewModel(
+//                studyIntervalTimerApplication().container.modelsRepository
+//            )
+//        }
     }
 }
 

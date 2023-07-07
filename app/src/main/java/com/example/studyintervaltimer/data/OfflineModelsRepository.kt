@@ -26,4 +26,8 @@ class OfflineModelsRepository (private val modelsDao: ModelsDao) : ModelsReposit
     override suspend fun updateTimersSet(timersSet: TimersSet) {
         return modelsDao.updateTimersSet(timersSet)
     }
+
+    override fun getTimerStream(id: Long): Flow<Timer> {
+        return modelsDao.getTimer(id)
+    }
 }

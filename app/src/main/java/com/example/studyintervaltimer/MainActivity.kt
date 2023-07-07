@@ -43,6 +43,10 @@ class MainActivity : ComponentActivity() {
         IntervalsDataSource.classicPomodoro.timers.forEach { timer ->
             dao.insertTimer(timer.toTimer(timersSetId))
         }
+        val timersSetId2 = dao.insertTimersSet(IntervalsDataSource.testing.timersSet)
+        IntervalsDataSource.testing.timers.forEach { timer ->
+            dao.insertTimer(timer.toTimer(timersSetId2))
+        }
     }
 }
 

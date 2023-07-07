@@ -46,7 +46,8 @@ class ChainedTimersViewModel(
                                         id = timer.timerId,
                                         timerSetId = timer.isInTimerSetId
                                     )
-                                )
+                                ),
+                                modelsRepository = modelsRepository
                             )
                         }.toMutableList(),
                         currentTimerId = it.timerSet.currentTimerId,
@@ -76,7 +77,7 @@ class ChainedTimersViewModel(
     fun moveToPrevTimer() {
         val currentTimer = getCurrentTimer()
         val prevTimer = getPrevTimer()
-        currentTimer.pauseTimer()
+        currentTimer.resetTimer()
         if (prevTimer !== null) {
             prevTimer.resetTimer()
             viewModelScope.launch {
@@ -90,20 +91,21 @@ class ChainedTimersViewModel(
     }
 
     fun onTimerFinish() {
-        if (uiState.value.timerDetails.currentTimerId <= uiState.value.timerDetails.timers.size - 1) {
+        if (getNextTimer() != null) {
             viewModelScope.launch {
                 modelsRepository.updateTimersSet(
                     uiState.value.copy(
-                        timerDetails = uiState.value.timerDetails.copy(currentTimerId = uiState.value.timerDetails.currentTimerId.inc())
+                        timerDetails = uiState.value.timerDetails.copy(currentTimerId = uiState.value.timerDetails.currentTimerId + 1)
                     ).toTimersSet()
                 )
+                getTimer(uiState.value.timerDetails.currentTimerId + 1)?.startTimer()
             }
-            getCurrentTimer().startTimer()
         } else {
-            uiState.value.timerDetails.timers.forEach {
-                it.resetTimer()
-            }
+
             viewModelScope.launch {
+                uiState.value.timerDetails.timers.forEach {
+                    it.resetTimer()
+                }
                 modelsRepository.updateTimersSet(
                     uiState.value.copy(
                         timerDetails = uiState.value.timerDetails.copy(currentTimerId = uiState.value.timerDetails.timers[0].timerUiState.value.timerDetails.id)
@@ -114,10 +116,9 @@ class ChainedTimersViewModel(
     }
 
     private fun getTimer(no: Long): TimerViewModel? {
-        if (no - 1 > uiState.value.timerDetails.timers.lastIndex || no - 1 < 0) {
-            return null
+        return uiState.value.timerDetails.timers.find {
+             it.timerUiState.value.timerDetails.id == no
         }
-        return uiState.value.timerDetails.timers[((no - 1).toInt())]
     }
 
     fun getCurrentTimer(): TimerViewModel {

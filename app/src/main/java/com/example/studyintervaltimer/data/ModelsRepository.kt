@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ModelsRepository {
     fun getAllTimersSetsWithTimersStream(): Flow<List<TimersSetWithTimers>>
     fun getTimerSetWithTimersStream(id: Long): Flow<TimersSetWithTimers>
+    fun getTimerStream(id: Long): Flow<Timer>
 
     suspend fun insertTimer(timer: Timer): Long
 

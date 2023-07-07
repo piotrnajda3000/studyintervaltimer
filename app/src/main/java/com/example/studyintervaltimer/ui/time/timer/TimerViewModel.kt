@@ -1,47 +1,68 @@
 package com.example.studyintervaltimer.ui.time.timer
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.studyintervaltimer.data.ModelsRepository
 import com.example.studyintervaltimer.ui.time.TickStrategy
 import com.example.studyintervaltimer.ui.time.getAsMs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class TimerViewModel(
     initialState: TimerUiState = TimerUiState(),
+    private var modelsRepository: ModelsRepository,
 ) : ViewModel() {
     private val _timerUiState = MutableStateFlow(initialState)
     val timerUiState = _timerUiState.asStateFlow()
 
     fun resetTimer() {
-        _timerUiState.update {
-            it.copy(
-                timerDetails = it.timerDetails.copy(
+        viewModelScope.launch {
+            modelsRepository.updateTimer(
+            timerUiState.value.copy(
+                timerDetails = timerUiState.value.timerDetails.copy(
                     isTimerRunning = false,
-                    remainingTimeMs = it.timerDetails.totalTime.getAsMs(),
+                    remainingTimeMs = timerUiState.value.timerDetails.totalTime.getAsMs(),
                     elapsedTime = 0L
                 )
-            )
+            ).toTimer())
         }
     }
 
     fun startTimer() {
         if (timerUiState.value.timerDetails.remainingTime.getAsMs() > 0) {
-            _timerUiState.update {
-                it.copy(timerDetails = it.timerDetails.copy(isTimerRunning = true))
+            viewModelScope.launch {
+                timerUiState.value.copy(
+                    timerDetails = timerUiState.value.timerDetails.copy(
+                        isTimerRunning = true
+                    )
+                )
             }
         }
     }
 
     fun pauseTimer() {
-        _timerUiState.update {
-            it.copy(timerDetails = it.timerDetails.copy(isTimerRunning = false))
+        viewModelScope.launch {
+            modelsRepository.updateTimer(
+                timerUiState.value.copy(
+                    timerDetails =
+                    timerUiState.value.timerDetails.copy(
+                        isTimerRunning = false
+                    )
+                ).toTimer()
+            )
         }
     }
 
     fun toggleTimer() {
-        _timerUiState.update {
-            it.copy(timerDetails = it.timerDetails.copy(isTimerRunning = !it.timerDetails.isTimerRunning))
+        viewModelScope.launch {
+            modelsRepository.updateTimer(
+                timerUiState.value.copy(
+                    timerDetails = timerUiState.value.timerDetails.copy(
+                        isTimerRunning = !timerUiState.value.timerDetails.isTimerRunning
+                    )
+                ).toTimer())
         }
     }
 
@@ -51,7 +72,7 @@ class TimerViewModel(
     }
 
     suspend fun tick(tickStrategy: TickStrategy) {
-        tickStrategy.tick(_timerUiState)
+        tickStrategy.tick(_timerUiState, modelsRepository = modelsRepository)
     }
 }
 

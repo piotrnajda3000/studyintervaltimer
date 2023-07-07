@@ -15,6 +15,9 @@ interface ModelsDao {
     @Query("SELECT * from TimersSet")
     fun getTimerSetsWithTimers(): Flow<List<TimersSetWithTimers>>
 
+    @Query("SELECT * from Timer WHERE timerId = :id")
+    fun getTimer(id: Long): Flow<Timer>
+
     @Transaction
     @Query("SELECT * from TimersSet WHERE timerSetId = :id")
     fun getTimerSetWithTimers(id: Long): Flow<TimersSetWithTimers>

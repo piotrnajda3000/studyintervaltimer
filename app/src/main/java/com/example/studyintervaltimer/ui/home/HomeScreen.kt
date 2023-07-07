@@ -2,6 +2,7 @@ package com.example.studyintervaltimer.ui.home
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.studyintervaltimer.R
 import com.example.studyintervaltimer.StudyIntervalTimerTopAppBar
@@ -50,14 +52,15 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .padding(it)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         )
         {
             homeUiState.timerSetsWithTimers.forEach { set ->
                 WorkoutCard(
                     workout = set,
                     navigateToWorkout = navigateToWorkout,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(16.dp).fillMaxWidth()
                 )
             }
         }
@@ -79,8 +82,9 @@ fun WorkoutCard(
     ) {
         Column(modifier = Modifier.padding(48.dp, 32.dp)) {
             Text(
-                text = stringResource(R.string.classic_pomodoro),
-                style = MaterialTheme.typography.headlineLarge
+                text = workout.timerSet.name,
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center,
             )
         }
     }
