@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +22,9 @@ import com.example.studyintervaltimer.R
 import com.example.studyintervaltimer.StudyIntervalTimerTopAppBar
 import com.example.studyintervaltimer.ui.navigation.NavigationDestination
 import com.example.studyintervaltimer.data.IntervalsDataSource
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.studyintervaltimer.AppViewModelProvider
+import com.example.studyintervaltimer.data.TimersSetWithTimers
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
@@ -30,8 +35,10 @@ object HomeDestination : NavigationDestination {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
-    navigateToWorkout: (Int) -> Unit,
+    navigateToWorkout: (Long) -> Unit,
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
+    val homeUiState by viewModel.homeUiState.collectAsState()
     Scaffold(
         topBar = {
             StudyIntervalTimerTopAppBar(
@@ -46,22 +53,28 @@ fun HomeScreen(
                 .fillMaxWidth()
         )
         {
-            WorkoutCard(
-                title = IntervalsDataSource.classicPomodoro.title,
-                navigateToWorkout = navigateToWorkout,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            homeUiState.timerSetsWithTimers.forEach { set ->
+                WorkoutCard(
+                    workout = set,
+                    navigateToWorkout = navigateToWorkout,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WorkoutCard(@StringRes title: Int, navigateToWorkout: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun WorkoutCard(
+    workout: TimersSetWithTimers,
+    navigateToWorkout: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     ElevatedCard(modifier = modifier,
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         onClick = {
-            navigateToWorkout(title)
+            navigateToWorkout(workout.timerSet.timerSetId)
         }
     ) {
         Column(modifier = Modifier.padding(48.dp, 32.dp)) {

@@ -7,9 +7,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.studyintervaltimer.ui.chainedTimers.ChainedTimersWorkoutDestination
-import com.example.studyintervaltimer.ui.chainedTimers.ChainedTimersWorkoutScreen
-import com.example.studyintervaltimer.ui.components.ChainedTimersViewModel
+import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersDestination
+import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersScreen
 import com.example.studyintervaltimer.ui.home.HomeDestination
 import com.example.studyintervaltimer.ui.home.HomeScreen
 
@@ -20,7 +19,6 @@ import com.example.studyintervaltimer.ui.home.HomeScreen
 fun StudyIntervalTimerNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    chainedTimersViewModel: ChainedTimersViewModel
 ) {
     NavHost(
         navController = navController,
@@ -29,20 +27,22 @@ fun StudyIntervalTimerNavHost(
     ) {
         composable(route = HomeDestination.route) {
             HomeScreen(
-                navigateToWorkout = { title ->
-                    navController.navigate("${ChainedTimersWorkoutDestination.route}/${title}")
+                navigateToWorkout = { id ->
+                    navController.navigate("${ChainedTimersDestination.route}/${id}")
                 }
             )
         }
-        composable(route = ChainedTimersWorkoutDestination.routeWithArgs, arguments = listOf(
-            navArgument(ChainedTimersWorkoutDestination.workoutId) {
-                type = NavType.IntType
-            })) {
-            it.arguments?.getInt(ChainedTimersWorkoutDestination.workoutId)?.let { it1 ->
-                ChainedTimersWorkoutScreen(onNavigateUp = {
+        composable(
+            route = ChainedTimersDestination.routeWithArgs, arguments = listOf(
+                navArgument(ChainedTimersDestination.workoutId) {
+                    type = NavType.LongType
+                })
+        ) {
+            ChainedTimersScreen(
+                onNavigateUp = {
                     navController.navigateUp()
-                }, title = it1, chainedTimersViewModel = chainedTimersViewModel)
-            }
+                },
+            )
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.studyintervaltimer.ui.components
+package com.example.studyintervaltimer.ui.time
 
 data class Time(var ms: Long)
 

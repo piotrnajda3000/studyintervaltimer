@@ -2,40 +2,27 @@ package com.example.studyintervaltimer.data
 
 import androidx.annotation.StringRes
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.example.studyintervaltimer.R
-import com.example.studyintervaltimer.ui.components.TimerUiState
-import com.example.studyintervaltimer.ui.components.TimerViewModel
+import com.example.studyintervaltimer.ui.time.timer.TimerDetails
+import com.example.studyintervaltimer.ui.time.timer.TimerUiState
 
 object IntervalsDataSource {
-    var classicPomodoro2 = Workout(title = R.string.classic_pomodoro,
-    timers = mutableListOf(
-        TimerViewModel(TimerUiState(25L * 60000)),
-        TimerViewModel(TimerUiState(5L * 60000L)),
-        TimerViewModel(TimerUiState(25L * 60000)),
-        TimerViewModel(TimerUiState(5L * 60000L)),
-        TimerViewModel(TimerUiState(25L * 60000L)),
-        TimerViewModel(TimerUiState(5L * 60000L)),
-        TimerViewModel(TimerUiState(25L * 60000L)),
-        TimerViewModel(TimerUiState(20L * 60000L))
-    )
-    )
-    var classicPomodoro = Workout(title = R.string.classic_pomodoro,
+    var classicPomodoro = TimerSetWithTimers(
+        timersSet = TimersSet(
+            name = "Classic Pomodoro",
+            currentTimerId = 1,
+        ),
         timers = mutableListOf(
-            TimerViewModel(TimerUiState(1L * 1000L)),
-            TimerViewModel(TimerUiState(2L * 1000L)),
-            TimerViewModel(TimerUiState(3L * 1000L)),
-            TimerViewModel(TimerUiState(2L * 1000L)),
-            TimerViewModel(TimerUiState(1L * 1000L)),
-            TimerViewModel(TimerUiState(2L * 1000L)),
-            TimerViewModel(TimerUiState(1L * 1000L)),
-            TimerViewModel(TimerUiState(2L * 1000L))
+            TimerUiState(TimerDetails(id = 1, totalTimeMs = 25L * 60000)),
+            TimerUiState(TimerDetails(id = 2, totalTimeMs = 5L * 60000L)),
+            TimerUiState(TimerDetails(id = 3, totalTimeMs = 25L * 60000)),
+            TimerUiState(TimerDetails(id = 4, totalTimeMs = 5L * 60000L)),
+            TimerUiState(TimerDetails(id = 5, totalTimeMs = 25L * 60000L)),
+            TimerUiState(TimerDetails(id = 6, totalTimeMs = 5L * 60000L)),
+            TimerUiState(TimerDetails(id = 7, totalTimeMs = 25L * 60000L)),
+            TimerUiState(TimerDetails(id = 8, totalTimeMs = 20L * 60000L))
         )
     )
 }
 
-@Entity
-data class Workout(
-    @StringRes val title: Int,
-    val timers: MutableList<TimerViewModel>
-)
+data class TimerSetWithTimers(val timersSet: TimersSet, val timers: MutableList<TimerUiState>)

@@ -1,5 +1,6 @@
-package com.example.studyintervaltimer.ui.chainedTimers
+package com.example.studyintervaltimer.ui.time.chainedTimer
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -25,42 +26,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.example.studyintervaltimer.AppViewModelProvider
 import com.example.studyintervaltimer.R
 import com.example.studyintervaltimer.StudyIntervalTimerTopAppBar
 import com.example.studyintervaltimer.data.IntervalsDataSource
-import com.example.studyintervaltimer.ui.components.ChainedTimersViewModel
-import com.example.studyintervaltimer.ui.components.Timer
+import com.example.studyintervaltimer.ui.time.ChainedTimerTickStrategy
 import com.example.studyintervaltimer.ui.navigation.NavigationDestination
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
-object ChainedTimersWorkoutDestination : NavigationDestination {
-    override val route = "chained_timers_workout"
+object ChainedTimersDestination : NavigationDestination {
+    override val route = "chained_timers"
     override val titleRes = R.string.workout
     const val workoutId = "workoutId"
     val routeWithArgs = "$route/{$workoutId}"
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChainedTimersWorkoutScreen(
-    chainedTimersViewModel: ChainedTimersViewModel,
+fun ChainedTimersScreen(
     onNavigateUp: () -> Unit,
-    @StringRes title: Int,
+    viewModel: ChainedTimersViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val timersUiState by chainedTimersViewModel.timersUiState.collectAsState()
-    if (!timersUiState.haveTimersBeenInitialized) {
-        LaunchedEffect(Unit) {
-            IntervalsDataSource.classicPomodoro.timers.forEach { interval ->
-                chainedTimersViewModel.addTimer(interval)
-            }
-            chainedTimersViewModel.setHaveTimersBeenInitialized(true);
-        }
-    }
+    val uiState by viewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
+    Log.d("kurwa", uiState.timerDetails.currentTimerId.toString())
+
+    // Initialize timers
+//    if (!uiState.setDetails.haveTimersBeenInitialized) {
+//        LaunchedEffect(Unit) {
+//            IntervalsDataSource.classicPomodoro.timers.forEach { interval ->
+//                viewModel.addTimer(interval)
+//            }
+//            viewModel.setHaveTimersBeenInitialized(true);
+//        }
+//    }
     Scaffold(
         topBar = {
             StudyIntervalTimerTopAppBar(
-                title = stringResource(id = title),
+                title = uiState.setDetails.name,
                 canNavigateBack = true,
                 navigateUp = onNavigateUp
             )
@@ -70,7 +75,7 @@ fun ChainedTimersWorkoutScreen(
                 Row() {
                     IconButton(
                         onClick = {
-                                chainedTimersViewModel.prevTimer();
+                            viewModel.moveToPrevTimer();
                         },
                         modifier = Modifier.weight(1f),
                     ) {
@@ -82,7 +87,7 @@ fun ChainedTimersWorkoutScreen(
                     }
                     FilledTonalIconButton(
                         onClick = {
-                                chainedTimersViewModel.pauseOrResume()
+                            viewModel.getCurrentTimer().toggleTimer()
                         },
                         modifier = Modifier.weight(1f),
                     ) {
@@ -94,7 +99,9 @@ fun ChainedTimersWorkoutScreen(
                     }
                     IconButton(
                         onClick = {
-                                chainedTimersViewModel.nextTimer();
+                            coroutineScope.launch {
+                                viewModel.moveToNextTimer();
+                            }
                         }, modifier = Modifier.weight(1f)
                     ) {
                         Icon(
@@ -113,11 +120,15 @@ fun ChainedTimersWorkoutScreen(
             verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
             item {
-                timersUiState.timers.forEach { timer ->
-                    Timer(
-                        chainedTimer = timer,
-                        currentTimerNo = timersUiState.currentTimerNo,
-                        modifier = Modifier.padding(16.dp)
+                uiState.timerDetails.timers.forEach { timer ->
+                    ChainedTimer(
+                        timer = timer,
+                        modifier = Modifier.padding(16.dp),
+                        currentTimerNo = uiState.timerDetails.currentTimerId,
+                        tickStrategy = ChainedTimerTickStrategy(
+                            onTimerFinish = { viewModel.onTimerFinish() },
+                            currentTimerId = timer.timerUiState.value.timerDetails.id
+                        )
                     )
                 }
             }

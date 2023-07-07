@@ -1,4 +1,4 @@
-package com.example.studyintervaltimer.ui.components
+package com.example.studyintervaltimer.ui.time.chainedTimer
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,43 +22,49 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.dp
+import com.example.studyintervaltimer.ui.time.timer.TimerViewModel
+import com.example.studyintervaltimer.ui.time.TickStrategy
+import com.example.studyintervaltimer.ui.time.displayAsMinutes
+import com.example.studyintervaltimer.ui.time.getAsMs
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Timer(
-    chainedTimer: ChainedTimer,
-    currentTimerNo: Int,
+fun ChainedTimer(
+    timer: TimerViewModel,
+    currentTimerNo: Long,
     modifier: Modifier = Modifier,
+    tickStrategy: TickStrategy,
 ) {
-    val timerUiState by chainedTimer.getTimerUiState().collectAsState()
+    val timerUiState by timer.timerUiState.collectAsState()
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
 
     var height = 0f;
 
     LaunchedEffect(
-        key1 = timerUiState.remainingTime.getAsMs(),
-        key2 = timerUiState.isTimerRunning,
+        key1 = timerUiState.timerDetails.remainingTime.getAsMs(),
+        key2 = timerUiState.timerDetails.isTimerRunning,
         key3 = currentTimerNo
     ) {
-        chainedTimer.tick(currentTimerNo)
+        timer.tick(tickStrategy)
         // Scroll the current timer into view
-        if (chainedTimer.timerInstanceId.equals(currentTimerNo)) {
+        if (timerUiState.timerDetails.id == currentTimerNo) {
             coroutineScope.launch {
                 bringIntoViewRequester.bringIntoView(
-                    rect = Rect(0f, -100f, 0f, height + 96f))
+                    rect = Rect(0f, -100f, 0f, height + 96f)
+                )
             }
         }
     }
 
-    val text = if (chainedTimer.timerInstanceId == currentTimerNo) {
+    val text = if (timerUiState.timerDetails.id == currentTimerNo) {
         MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.onBackground
     }
 
-    val background = if (chainedTimer.timerInstanceId == currentTimerNo) {
+    val background = if (timerUiState.timerDetails.id == currentTimerNo) {
         MaterialTheme.colorScheme.surfaceVariant
     } else {
         MaterialTheme.colorScheme.background
@@ -76,14 +82,14 @@ fun Timer(
             }
     )
     {
-        Text(text = "Timer ${chainedTimer.timerInstanceId}", color = text)
+        Text(text = "Timer ${timerUiState.timerDetails.id}", color = text)
         Text(
-            text = timerUiState.remainingTime.displayAsMinutes(),
+            text = timerUiState.timerDetails.remainingTime.displayAsMinutes(),
             style = MaterialTheme.typography.displayLarge,
             color = text
         )
         LinearProgressIndicator(
-            progress = chainedTimer.timerViewModel.getProgress(),
+            progress = timer.getProgress(),
             trackColor = MaterialTheme.colorScheme.background,
             color = MaterialTheme.colorScheme.primary
         )

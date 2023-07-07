@@ -14,8 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.studyintervaltimer.R
-import com.example.studyintervaltimer.ui.components.ChainedTimersViewModel
+import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersViewModel
 import com.example.studyintervaltimer.ui.navigation.StudyIntervalTimerNavHost
 
 
@@ -23,9 +22,8 @@ import com.example.studyintervaltimer.ui.navigation.StudyIntervalTimerNavHost
 @Composable
 fun StudyIntervalTimerApp(
     navController: NavHostController = rememberNavController(),
-    chainedTimersViewModel: ChainedTimersViewModel = viewModel(),
 ) {
-    StudyIntervalTimerNavHost(navController = navController, chainedTimersViewModel = chainedTimersViewModel)
+    StudyIntervalTimerNavHost(navController = navController)
 }
 
 /**
