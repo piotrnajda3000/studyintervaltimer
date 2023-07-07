@@ -1,5 +1,6 @@
 package com.example.studyintervaltimer.ui.components
 
+import android.util.Log
 import kotlinx.coroutines.flow.StateFlow
 
 class ChainedTimer(
@@ -13,7 +14,10 @@ class ChainedTimer(
 
     suspend fun tick(currentTimerNo: Int) {
         if (currentTimerNo.equals(timerInstanceId)) {
+            Log.d("tick", "tick")
             timerViewModel.tick(onTimerFinish)
         }
     }
+
+  
 }

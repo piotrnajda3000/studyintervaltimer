@@ -1,7 +1,7 @@
 package com.example.studyintervaltimer.ui.components
 
 class TimerUiState(
-    private var totalTimeMs: Long,
+    private var totalTimeMs: Long = 0,
     private var remainingTimeMs: Long = totalTimeMs,
     var isTimerRunning: Boolean = false,
 ) {
@@ -15,7 +15,7 @@ class TimerUiState(
         return TimerUiState(
             totalTimeMs = this.totalTimeMs,
             remainingTimeMs = remainingTimeMs,
-            isTimerRunning = isTimerRunning
+            isTimerRunning = isTimerRunning,
         )
     }
 }

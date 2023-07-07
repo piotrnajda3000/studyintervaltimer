@@ -1,7 +1,10 @@
 <resources>
-    <string name="app_name">StudyIntervalTimer</string>
+    <string name="app_name">Study Interval Timer</string>
     <string name="resume">Resume</string>
     <string name="prevTimer">Previous</string>
     <string name="nextTimer">Next</string>
     <string name="settings">Settings</string>
+    <string name="back_button">Back</string>
+    <string name="workout">Workout</string>
+    <string name="classic_pomodoro">Classic Pomodoro</string>
 </resources>
