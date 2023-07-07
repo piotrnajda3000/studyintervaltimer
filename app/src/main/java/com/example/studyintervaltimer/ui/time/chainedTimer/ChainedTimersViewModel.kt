@@ -30,6 +30,10 @@ class ChainedTimersViewModel(
             .filterNotNull()
             .map {
                 ChainedTimersUiState(
+                    setDetails = ChainedTimersSetDetails(
+                        id = it.timerSet.timerSetId,
+                        name = it.timerSet.name
+                    ),
                     timerDetails = ChainedTimersDetails(
                         timers = it.timers.map { timer ->
                             TimerViewModel(
