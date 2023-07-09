@@ -12,7 +12,7 @@ import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersViewMode
 import com.example.studyintervaltimer.ui.time.timer.TimerViewModel
 
 /**
- * Provides Factory to create instance of ViewModel for the entire Inventory app
+ * Provides Factory to create instance of ViewModel for the entire Study Interval Timer app
  */
 object AppViewModelProvider {
     val Factory = viewModelFactory {
