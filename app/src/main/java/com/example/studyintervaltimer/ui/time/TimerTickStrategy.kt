@@ -1,12 +1,16 @@
 package com.example.studyintervaltimer.ui.time
 
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import com.example.studyintervaltimer.data.ModelsRepository
+import com.example.studyintervaltimer.data.Time
+import com.example.studyintervaltimer.ui.progress.ProgressViewModel.Companion.TIME_ID
 import com.example.studyintervaltimer.ui.time.timer.TimerUiState
 import com.example.studyintervaltimer.ui.time.timer.toTimer
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 
 interface TickStrategy {
     val onTimerFinish: () -> Unit
@@ -47,8 +51,16 @@ class SingleTimerTickStrategy(
                                 .minus(1000L),
                             elapsedTime = uiState.value.timerDetails.elapsedTime + 1000L
                         )
-                    ).toTimer()
+                    ).toTimer().also {
+                        modelsRepository.incTimeBy(
+                            time = Time(
+                                time = 1000L,
+                                timeId = TIME_ID
+                            ),
+                        )
+                    }
                 )
+
             }
         }
     }

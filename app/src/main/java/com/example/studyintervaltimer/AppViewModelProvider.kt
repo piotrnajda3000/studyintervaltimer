@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.studyintervaltimer.ui.home.HomeViewModel
+import com.example.studyintervaltimer.ui.progress.ProgressViewModel
 import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersViewModel
 import com.example.studyintervaltimer.ui.time.timer.TimerViewModel
 
@@ -26,12 +27,11 @@ object AppViewModelProvider {
                 studyIntervalTimerApplication().container.modelsRepository
             )
         }
-
-//        initializer {
-//            TimerViewModel(
-//                studyIntervalTimerApplication().container.modelsRepository
-//            )
-//        }
+        initializer {
+            ProgressViewModel(
+                studyIntervalTimerApplication().container.modelsRepository
+            )
+        }
     }
 }
 

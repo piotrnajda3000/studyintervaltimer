@@ -1,8 +1,18 @@
 package com.example.studyintervaltimer.data
 
+import android.database.sqlite.SQLiteConstraintException
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 
 class OfflineModelsRepository (private val modelsDao: ModelsDao) : ModelsRepository {
+    override fun getTimerStream(id: Long): Flow<Timer> {
+        return modelsDao.getTimer(id)
+    }
+
+    override suspend fun insertTime(time: Time) {
+        return modelsDao.insertTime(time)
+    }
+
     override fun getAllTimersSetsWithTimersStream(): Flow<List<TimersSetWithTimers>> {
         return modelsDao.getTimerSetsWithTimers()
     }
@@ -27,7 +37,11 @@ class OfflineModelsRepository (private val modelsDao: ModelsDao) : ModelsReposit
         return modelsDao.updateTimersSet(timersSet)
     }
 
-    override fun getTimerStream(id: Long): Flow<Timer> {
-        return modelsDao.getTimer(id)
+    override fun getTimeStream(id: Long): Flow<Time> {
+        return modelsDao.getTimeStream(id)
+    }
+
+    override suspend fun incTimeBy(time: Time) {
+        modelsDao.incOrInsertTime(time)
     }
 }

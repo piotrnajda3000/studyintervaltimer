@@ -9,8 +9,8 @@ import androidx.room.RoomDatabase
  * Database class with a singleton Instance object.
  */
 @Database(
-    entities = [TimersSet::class,Timer::class],
-    version = 20,
+    entities = [TimersSet::class,Timer::class,Time::class],
+    version = 26,
     exportSchema = false
 )
 abstract class StudyIntervalTimerDatabase : RoomDatabase() {

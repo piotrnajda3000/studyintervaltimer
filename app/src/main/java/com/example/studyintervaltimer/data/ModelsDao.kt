@@ -1,7 +1,9 @@
 package com.example.studyintervaltimer.data
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
@@ -33,4 +35,25 @@ interface ModelsDao {
 
     @Insert
     fun insertTimersSet(timersSet: TimersSet): Long
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE, entity = Time::class)
+    fun insertTime(time: Time)
+
+    @Query("UPDATE Time SET time = time + :timeMs WHERE timeId = :id")
+    fun incTimeBy(id: Long, timeMs: Long)
+
+    @Query("SELECT * from Time WHERE timeId = :id")
+    fun getTime(id: Long): Time?
+
+    @Query("SELECT * from Time WHERE timeId = :id")
+    fun getTimeStream(id: Long): Flow<Time>
+
+    fun incOrInsertTime(time: Time) {
+        val test = getTime(time.timeId)
+        if (test == null) {
+            insertTime(time)
+        } else {
+            incTimeBy(time.timeId, time.time)
+        }
+    }
 }

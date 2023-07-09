@@ -26,19 +26,15 @@ object IntervalsDataSource {
     )
     var testing = TimerSetWithTimers(
         timersSet = TimersSet(
-            name = "For testing",
+            name = "Short interval",
             currentTimerId = 9,
             timerSetId = 2
         ),
         timers = mutableListOf(
             TimerUiState(TimerDetails(id = 9, totalTimeMs = 2L * 1000L)),
-            TimerUiState(TimerDetails(id = 10, totalTimeMs = 1L * 1000L)),
-            TimerUiState(TimerDetails(id = 11, totalTimeMs = 3L * 60000)),
-            TimerUiState(TimerDetails(id = 12, totalTimeMs = 1L * 1000L)),
-            TimerUiState(TimerDetails(id = 13, totalTimeMs = 2L * 1000L)),
-            TimerUiState(TimerDetails(id = 14, totalTimeMs = 5L * 1000L)),
-            TimerUiState(TimerDetails(id = 15, totalTimeMs = 3L * 1000L)),
-            TimerUiState(TimerDetails(id = 16, totalTimeMs = 2L * 1000L))
+            TimerUiState(TimerDetails(id = 10, totalTimeMs = 5L * 1000L)),
+            TimerUiState(TimerDetails(id = 11, totalTimeMs = 3L * 1000L)),
+            TimerUiState(TimerDetails(id = 12, totalTimeMs = 2L * 1000L))
         )
     )
 }

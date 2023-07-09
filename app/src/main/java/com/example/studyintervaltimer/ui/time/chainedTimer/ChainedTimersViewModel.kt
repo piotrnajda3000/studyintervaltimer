@@ -98,7 +98,6 @@ class ChainedTimersViewModel(
                         timerDetails = uiState.value.timerDetails.copy(currentTimerId = uiState.value.timerDetails.currentTimerId + 1),
                     ).toTimersSet()
                 )
-                Log.d("hehe", getNextTimer()?.timerUiState!!.value.timerDetails.id.toString())
                 getNextTimer()?.startTimer()
             }
         } else {

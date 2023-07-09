@@ -5,6 +5,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 
+@Entity
+data class Time(
+    @PrimaryKey
+    val timeId: Long = 0,
+    val time: Long = 0
+)
 
 @Entity
 data class TimersSet(

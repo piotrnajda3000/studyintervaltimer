@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Set to false to not populate DB.
-        if (false) {
+        if (true) {
             db = StudyIntervalTimerDatabase.getDatabase(context = this)
             dao = db.modelsDao()
             populateDb()

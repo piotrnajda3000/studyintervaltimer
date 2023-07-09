@@ -11,6 +11,8 @@ import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersDestinat
 import com.example.studyintervaltimer.ui.time.chainedTimer.ChainedTimersScreen
 import com.example.studyintervaltimer.ui.home.HomeDestination
 import com.example.studyintervaltimer.ui.home.HomeScreen
+import com.example.studyintervaltimer.ui.progress.ProgressDestination
+import com.example.studyintervaltimer.ui.progress.ProgressScreen
 
 /**
  * Provides Navigation graph for the application.
@@ -29,7 +31,19 @@ fun StudyIntervalTimerNavHost(
             HomeScreen(
                 navigateToWorkout = { id ->
                     navController.navigate("${ChainedTimersDestination.route}/${id}")
+                },
+                navigateToProgress = {
+                    navController.navigate(ProgressDestination.route)
                 }
+            )
+        }
+        composable(
+            route = ProgressDestination.route
+        ) {
+            ProgressScreen(
+                navigateToHome = {
+                    navController.navigate(HomeDestination.route)
+                },
             )
         }
         composable(
